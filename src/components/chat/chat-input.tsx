@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Send } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { useChatContext } from "./chat-context";
-import { parse } from "path";
 import { Spinner } from "../ui/spinner";
 
 export function ChatInput() {

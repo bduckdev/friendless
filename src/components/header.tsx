@@ -1,20 +1,29 @@
-import Link from "next/link";
-import { auth } from "~/server/auth";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+"use client";
 
-export async function Header() {
-  const session = await auth();
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { UserDropdown } from "./header/user-dropdown";
+import { MobileNav } from "./header/mobile-nav";
+import { Button } from "~/components/ui/button";
+import { Spinner } from "~/components/ui/spinner";
+
+export function Header() {
+  const { data: session, status } = useSession();
 
   return (
-    <header className="border-b">
+    <header className="bg-background sticky top-0 z-50 border-b">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        {/* Logo Section */}
-        <div className="flex-shrink-0 text-xl font-semibold">
-          <Link href="/">friendless</Link>
+        {/* Mobile Menu + Logo Section */}
+        <div className="flex items-center gap-3">
+          <MobileNav session={session} />
+
+          <div className="text-xl font-semibold">
+            <Link href="/">friendless</Link>
+          </div>
         </div>
 
-        {/* Navigation Section */}
-        <nav className="flex flex-1 justify-center gap-6">
+        {/* Desktop Navigation - Hidden on Mobile */}
+        <nav className="hidden flex-1 justify-center gap-6 md:flex">
           {session?.user && (
             <Link
               href="/friends"
@@ -39,26 +48,14 @@ export async function Header() {
 
         {/* User Section */}
         <div className="flex flex-shrink-0 items-center gap-4">
-          {session?.user ? (
-            <div className="flex items-center gap-2">
-              <Avatar>
-                <AvatarImage
-                  src={session.user.image ?? undefined}
-                  alt={session.user.name ?? "User"}
-                />
-                <AvatarFallback>
-                  {session.user.name?.charAt(0).toUpperCase() ?? "U"}
-                </AvatarFallback>
-              </Avatar>
-              <span className="text-sm font-medium">{session.user.name}</span>
-            </div>
+          {status === "loading" ? (
+            <Spinner className="h-6 w-6" />
+          ) : session?.user ? (
+            <UserDropdown session={session} />
           ) : (
-            <Link
-              href="/api/auth/signin"
-              className="hover:text-primary text-sm font-medium transition-colors"
-            >
-              Sign In
-            </Link>
+            <Button variant="default" size="sm" asChild>
+              <Link href="/api/auth/signin">Sign In</Link>
+            </Button>
           )}
         </div>
       </div>
