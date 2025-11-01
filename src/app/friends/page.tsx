@@ -9,12 +9,13 @@ import { api } from "~/trpc/server";
 export default async function FriendsPage() {
     const session = await auth();
     const friends = await api.friend.getAll()
+
     if (!session?.user) {
         redirect("/");
     }
 
     return (
-        <main className="container mx-auto px-4 py-8">
+        <main className="shadow-xl container mx-auto px-4 py-8">
             {/* Header with Create Button */}
             <div className="mb-8 flex items-center justify-between">
                 <div>
@@ -32,10 +33,15 @@ export default async function FriendsPage() {
             {/* Friends Grid */}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {friends.map((friend) => (
-                    <FriendCard
+                    <Link
                         key={friend.id}
-                        friend={friend}
-                    />
+                        href={`/chat/${friend.id}`}
+                        className="transition-all hover:scale-[1.02] hover:shadow-lg"
+                    >
+                        <FriendCard
+                            friend={friend}
+                        />
+                    </Link>
                 ))}
             </div>
 

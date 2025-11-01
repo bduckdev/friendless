@@ -6,32 +6,36 @@ import { SessionProvider } from "next-auth/react";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { Header } from "~/components/header";
+import AppShell from "~/components/app-shell";
 
 export const metadata: Metadata = {
-  title: "Friendless",
-  description:
-    "AI companion app to cure your loneliness and fix all your problems.",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+    title: "Friendless",
+    description:
+        "AI companion app to cure your loneliness and fix all your problems.",
+    icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
+
 const geist = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
+    subsets: ["latin"],
+    variable: "--font-geist-sans",
 });
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <html lang="en" className={`${geist.variable}`}>
-      <body>
-        <SessionProvider>
-          <TRPCReactProvider>
-            <Header />
-            {children}
-          </TRPCReactProvider>
-        </SessionProvider>
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en" className={`${geist.variable}`}>
+            <body>
+                <SessionProvider>
+                    <AppShell>
+                        <TRPCReactProvider>
+                            <Header />
+                            {children}
+                        </TRPCReactProvider>
+                    </AppShell>
+                </SessionProvider>
+            </body>
+        </html>
+    );
 }

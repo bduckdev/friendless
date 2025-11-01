@@ -22,10 +22,17 @@ friendless is an ai chat app to replace human interaction built with t3 stack.
 ### Planned Features
 
 - [ ] Add subscriptions via stripe.
-- [ ] Fancy home page with swiping cards and cool effects.
+- [x] Fancy home page with swiping cards and cool effects.
+- [x] Profile Page
+- [ ] Create Friend Form
+- [ ] Show that the friend is typing
 
 ### General improvements
 
 - [ ] Refactor tRPC routes and tests
 - [ ] Refactor chat components and server action for sending stuff
 - [ ] Prompt should produce actually good results.
+
+### Blocked
+
+- [ ] Update profile page with billing info

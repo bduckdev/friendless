@@ -28,7 +28,7 @@ export default async function ChatPage({
 
     return (
         <ChatProvider initialFriend={friend as FriendWithMessages}>
-            <div className="flex h-screen flex-col">
+            <div className="xl:shadow-xl flex h-screen flex-col w-full xl:w-2/3 mx-auto">
                 <ChatHeader />
                 <ChatMessages />
                 <ChatInput />

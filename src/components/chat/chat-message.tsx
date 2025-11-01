@@ -55,7 +55,7 @@ export function ChatMessage({
         >
             {/* Avatar for assistant messages (on left) */}
             {!isUser && (
-                <Avatar className="size-8 shrink-0">
+                <Avatar className="size-8 shrink-0 select-none">
                     <AvatarImage src={friendAvatar} alt={friendName} />
                     <AvatarFallback>
                         {friendName?.charAt(0).toUpperCase() ?? "A"}
