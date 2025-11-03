@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { ChatMessage } from "./chat-message";
 import { useChatContext } from "./chat-context";
+import { ChatResponseWrapper } from "./chat-response-wrapper";
 
 export function ChatMessages() {
     const { friend } = useChatContext();

@@ -29,7 +29,7 @@ interface ChatMessageProps {
 export function ChatMessage({
     messageId,
     role,
-    content,
+    content = "",
     friendName,
     friendAvatar,
 }: ChatMessageProps) {
@@ -43,7 +43,7 @@ export function ChatMessage({
     const isUser = role === "user";
     const userHasPosted = messages.some(m => m.role == "user")
     const isLastItem = messageId == messages[messages.length - 1]!.id
-    const isDeletable = userHasPosted && !isUser && isLastItem
+    const isDeletable = userHasPosted && !isUser && isLastItem && content !== ""
 
 
     return (
@@ -103,7 +103,9 @@ export function ChatMessage({
                     ],
                 )}
             >
-                <p className="text-sm break-words whitespace-pre-wrap">{content}</p>
+                {content.length > 1 ?
+                    <p className="text-sm break-words whitespace-pre-wrap">{content}</p>
+                    : <p className="text-sm italic whitespace-pre-wrap">{friendName} is typing...</p>}
             </div>
 
             {/* Delete button for assistant messages */}

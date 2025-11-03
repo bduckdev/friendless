@@ -49,3 +49,4 @@ yarn-error.log*
 # agents
 opencode.json
 AGENTS.md
+DATABASE_SCHEMA.md

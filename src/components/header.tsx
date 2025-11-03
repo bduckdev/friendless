@@ -4,8 +4,19 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { UserDropdown } from "./header/user-dropdown";
 import { MobileNav } from "./header/mobile-nav";
+import { cn } from "~/lib/utils";
 
 export function Header() {
+    const links = [{
+        href: "/friends",
+        text: "My Friends",
+        isProtected: true,
+    },
+    {
+        href: "/pricing",
+        text: "Pricing",
+        isProtected: false,
+    }]
     const { data: session, status } = useSession();
     if (status === "loading") {
         return
@@ -24,26 +35,16 @@ export function Header() {
                 </div>
 
                 <nav className="hidden flex-1 justify-center gap-6 md:flex">
-                    {session?.user && (
+                    {links.map((link) => (
                         <Link
-                            href="/friends"
-                            className="hover:text-primary text-sm font-medium transition-colors"
+                            key={link.href}
+                            href={link.href}
+                            className={cn("hover:text-primary text-sm font-medium transition-colors",
+                                (!session?.user.name && link.isProtected) && "hidden")}
                         >
-                            My Friends
+                            {link.text}
                         </Link>
-                    )}
-                    <Link
-                        href="/pricing"
-                        className="hover:text-primary text-sm font-medium transition-colors"
-                    >
-                        Pricing
-                    </Link>
-                    <Link
-                        href="/faq"
-                        className="hover:text-primary text-sm font-medium transition-colors"
-                    >
-                        FAQ
-                    </Link>
+                    ))}
                 </nav>
                 <div className="flex flex-shrink-0 items-center gap-4">
                     <UserDropdown session={session!} status={status} />

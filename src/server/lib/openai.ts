@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { api } from "~/trpc/server";
 import type { FriendWithMessages, Message } from "~/types";
 
 const openai = new OpenAI({
@@ -11,14 +12,13 @@ type OpenAIMessage = {
     content: string;
 }
 
-// Get completion from API
 export async function getCompletion(friend: FriendWithMessages, newMessage: string) {
     try {
         const formattedMessages = formatMessages(friend.messages)
         const completion = await openai.chat.completions.create({
             //model: "qwen3-235b",
             model: "qwen3-235b:strip_thinking_response=true",
-            messages: [{ role: "system", content: generateSystemPrompt(friend) }, ...formattedMessages, { role: "user", content: newMessage }],
+            messages: [{ role: "system", content: await generateSystemPrompt(friend) }, ...formattedMessages, { role: "user", content: newMessage }],
             temperature: 0.6,
             max_tokens: 1000,
             top_p: 0.95,
@@ -37,8 +37,51 @@ export async function getCompletion(friend: FriendWithMessages, newMessage: stri
     }
 }
 
+// Get completion from API
+export async function getCompletionStreaming(friend: FriendWithMessages, newMessage: string) {
+    const formattedMessages = formatMessages(friend.messages)
+    const stream = await openai.chat.completions.create({
+        //model: "qwen3-235b",
+        model: `qwen3-235b:strip_thinking_response=true:include_venice_system_prompt=false:enable_web_search="auto"`,
+        messages: [{ role: "system", content: await generateSystemPrompt(friend) }, ...formattedMessages, { role: "user", content: newMessage }],
+        temperature: 0.7,
+        max_tokens: 1000,
+        top_p: 0.95,
+        stream: true,
+        // presence_penalty: 0.6,
+        //frequency_penalty: 0.3,
+    })
+    const encoder = new TextEncoder()
+    const readable = new ReadableStream({
+        async start(controller) {
+            try {
+                for await (const chunk of stream) {
+                    const delta = chunk.choices[0]?.delta?.content;
+                    if (delta) {
+                        controller.enqueue(encoder.encode(delta));
+                    }
+                }
+            } catch (err) {
+                controller.error(err);
+            } finally {
+                controller.close();
+            }
+        },
+    });
+
+
+    return new Response(readable, {
+        headers: {
+            "Content-Type": "text/plain; charset=utf-8",
+            "Cache-Control": "no-cache",
+        },
+    });
+
+}
+
 // Use friend data to generate system prompt
-export function generateSystemPrompt(friend: FriendWithMessages): string {
+export async function generateSystemPrompt(friend: FriendWithMessages): Promise<string> {
+    const user = await api.user.getProfile()
     const { name, personality, traits, voice, interests, age, gender, background } = friend;
 
     const traitsText = traits?.length
@@ -51,7 +94,9 @@ export function generateSystemPrompt(friend: FriendWithMessages): string {
     const ageText = age ? `You are ${age} years old.` : "";
 
     return `
-You are ${name}. ${personality}
+You are ${name} engaged in a conversation with ${user.name}. ${personality}
+
+Below is information about you:
 
 Gender info:
 You are a ${gender}. The user is a male.
@@ -94,6 +139,5 @@ export function formatMessages(messages: Message[]): OpenAIMessage[] {
         .map(m => ({ role: m.role as "user" | "assistant", content: m.content }))
         .slice(-30)
 
-    console.log(fmt)
     return fmt
 }

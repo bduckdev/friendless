@@ -1,48 +1,102 @@
 "use client";
 
-import { useState } from "react";
 import { Send } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { useChatContext } from "./chat-context";
 import { Spinner } from "../ui/spinner";
+import { Controller, useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import z from "zod";
+import { Field, FieldError } from "../ui/field";
+import { Textarea } from "../ui/textarea";
+import { toast } from "sonner";
+import { useRef, useEffect } from "react";
 
 export function ChatInput() {
-    const [message, setMessage] = useState("");
+    const formSchema = z.object({
+        message: z.string()
+            .min(5)
+            .max(1500)
+    })
+
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            message: ""
+        }
+    })
+
+    async function onSubmit(data: z.infer<typeof formSchema>) {
+        const msg = data.message
+        try {
+            await handleSendMessage(msg);
+            form.reset({ message: "" })
+        } catch (error) {
+            form.setValue("message", msg)
+            toast.error("Uh oh! something went wrong. Try again later.");
+            console.error("Error: ", error)
+        }
+    }
+
     const { handleSendMessage, isLoading } = useChatContext();
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!message.trim() || isLoading) return;
+    const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
+    const baseHeightRef = useRef<number | null>(null)
 
-        const messageToSend = message;
-        setMessage(""); // Clear input immediately for better UX
-
-        try {
-            await handleSendMessage(messageToSend);
-        } catch (error) {
-            console.error("Failed to send message:", error);
-            // Restore message on error
-            setMessage(messageToSend);
+    useEffect(() => {
+        const el = textAreaRef.current;
+        if (el) {
+            el.style.height = "auto";
+            baseHeightRef.current = el.scrollHeight;
+            el.style.overflowY = "hidden";
         }
-    };
+    }, []);
+
+
+    function autoResize() {
+        const el = textAreaRef.current
+        if (!el) return
+
+        const baseHeight = baseHeightRef.current ?? 0
+
+
+        el.style.height = "auto";
+        el.style.height = `${el.scrollHeight}px`;
+
+        const isSingleLine = el.scrollHeight <= baseHeight + 2;
+        el.style.overflowY = isSingleLine ? "hidden" : "auto";
+    }
 
     return (
         <div className="bg-background border-t p-4">
-            <form onSubmit={handleSubmit} className="flex gap-2">
-                <input
-                    type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Message..."
-                    disabled={isLoading}
-                    className="bg-muted focus:border-primary flex-1 rounded-full border px-4 py-2 text-sm outline-none disabled:opacity-50"
-                />
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-2 items-center">
+                <Controller
+                    name="message"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                        <Field data-invald={fieldState.invalid}>
+                            <Textarea
+                                {...field}
+                                placeholder="Message..."
+                                id="message"
+                                ref={textAreaRef}
+                                aria-invalid={fieldState.invalid}
+                                disabled={isLoading}
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    autoResize()
+                                }}
+                                rows={1}
+                                className="transition-all min-h-10 max-h-40 resize-none rounded-2xl overflow-y-hidden field-sizing-fixed"
+                            />
+                        </Field>
+                    )} />
                 {!isLoading ? (
                     <Button
                         type="submit"
                         size="icon"
                         className="shrink-0 rounded-full"
-                        disabled={!message.trim() || isLoading}
+                        disabled={isLoading}
                     >
                         <Send className="size-4" />
                     </Button>

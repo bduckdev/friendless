@@ -39,14 +39,23 @@ export function ChatProvider({ initialFriend, children }: ChatProviderProps) {
             createdAt: new Date(),
         };
 
+
         setFriend((prev) => ({
             ...prev,
             messages: [...prev.messages, userMessage],
         }));
 
+        setTimeout(() => {
+            setFriend((prev) => ({
+                ...prev,
+                messages: [...prev.messages, { createdAt: new Date(), id: friend.id, role: "assistant", content: "" }],
+            }));
+        }, 500)
+
         try {
             startTransition(async () => {
                 const aiResponse = await sendMessage(friend, content);
+                setFriend((prev) => ({ ...prev, messages: prev.messages.filter((m) => m.content !== "") }))
                 setFriend((prev) => ({
                     ...prev,
                     messages: [...prev.messages, aiResponse],
@@ -59,6 +68,7 @@ export function ChatProvider({ initialFriend, children }: ChatProviderProps) {
                 ...prev,
                 messages: prev.messages.filter((m) => m.id !== userMessage.id),
             }));
+            setFriend((prev) => ({ ...prev, messages: prev.messages.filter((m) => m.content !== "") }))
             throw error;
         }
     };

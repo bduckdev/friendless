@@ -7,6 +7,7 @@ import { SessionProvider } from "next-auth/react";
 import { TRPCReactProvider } from "~/trpc/react";
 import { Header } from "~/components/header";
 import AppShell from "~/components/app-shell";
+import { Toaster } from "~/components/ui/sonner";
 
 export const metadata: Metadata = {
     title: "Friendless",
@@ -33,6 +34,7 @@ export default function RootLayout({
                             <Header />
                             {children}
                         </TRPCReactProvider>
+                        <Toaster />
                     </AppShell>
                 </SessionProvider>
             </body>
