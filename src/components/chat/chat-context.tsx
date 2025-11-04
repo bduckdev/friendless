@@ -37,10 +37,11 @@ export function ChatProvider({ initialFriend, children }: ChatProviderProps) {
 
     const handleSendMessage = async (content: string) => {
         // Optimistically add user message to UI
+        const textContent = content.trim()
         const userMessage: Message = {
             id: `user-${Date.now()}`,
             role: "user",
-            content: content.trim(),
+            content: textContent,
             createdAt: new Date(),
         };
 
@@ -54,7 +55,8 @@ export function ChatProvider({ initialFriend, children }: ChatProviderProps) {
         setTimeout(() => setIsThinking(true), 500)
         try {
             startTransition(async () => {
-                const iter = await sendMessage(friend, content);
+                const iter = await sendMessage(friend, textContent);
+                let trimmedFirst = false;
                 setTempMessage("")
                 const FLUSH_CHARS = 200
                 const FLUSH_MS = 50
@@ -77,8 +79,12 @@ export function ChatProvider({ initialFriend, children }: ChatProviderProps) {
                         const boundary = buf.includes('\n')
 
                         if (timeDue || sizeDue || boundary) flush()
-
-                        buf += frame.text
+                        if (!trimmedFirst) {
+                            buf += frame.text!.trim()
+                            trimmedFirst = true;
+                        } else {
+                            buf += frame.text
+                        }
                     } else if (frame.type === "final") {
                         flush()
                         setFriend((prev) => ({ ...prev, messages: [...prev.messages, frame.assistantMessage as Message] }))

@@ -151,7 +151,7 @@ export const messageRouter = createTRPCRouter({
 
             const assistantMessage = await ctx.db.message.create({
                 data: {
-                    content: newMessage,
+                    content: newMessage.trim(),
                     role: "assistant",
                     userId,
                     friendId: input.friendId,

@@ -29,24 +29,29 @@ friendless is an ai chat app to replace human interaction built with t3 stack.
 ### Planned Features
 
 - [ ] Add subscriptions via stripe.
-- [ ] Stream tokens
+- [x] Stream tokens
 - [x] Fancy home page with swiping cards and cool effects.
 - [x] Profile Page
 - [ ] Create Friend Form
-- [ ] Show that the friend is typing
+- [x] Show that the friend is typing
 - [ ] Reusable signin modal
-- [ ] Random types are || undefined but shouldn't be
 
 ### General improvements
 
-- [ ] Switch to RHF
+- [ ] Random types are || undefined but shouldn't be
+- [x] Switch to RHF
 - [ ] Actual pricing page
-- [ ] Message box should be a textinput
+- [x] Message box should be a textarea
 - [ ] Maybe instead of infinite scroll, swipe gallery should end on "Didn't find what you want? Make your own!"
 - [ ] Make DB script not use DEFAULT_FRIENDS_TEMPLATE and instead use TEST_FRIENDS
 - [ ] Refactor tRPC routes and tests
 - [ ] Refactor chat components and server action for sending stuff
 - [ ] Prompt should produce actually good results.
+
+### Fixes
+
+- [ ] ChatInput doesn't reset size properly after sent.
+- [x] Excess leading and trailing whitespace in messages should be removed.
 
 ### Blocked
 

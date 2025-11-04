@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useChatContext } from "./chat-context";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import { ChatMessageHandler } from "./chat-message-handler";
@@ -8,12 +8,26 @@ import { ChatMessageHandler } from "./chat-message-handler";
 export function ChatMessages() {
     const { friend, tempMessage, isThinking } = useChatContext();
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [dots, setDots] = useState("")
 
     const autoScroll = () => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     // Auto-scroll to bottom when new messages arrive
     useEffect(() => {
+        function animateDots() {
+            if (dots.length >= 3) {
+                setDots("")
+                return
+            }
+            setDots(d => d += ".")
+        }
+
+        const t = setTimeout(() => animateDots(), 500)
+        if (!isThinking) clearTimeout(t)
+    }, [isThinking, dots])
+    useEffect(() => {
         autoScroll()
     }, [friend.messages, tempMessage]);
+
     return (
         <div className="flex-1 overflow-y-auto p-4">
             {friend.messages.map((message) => (
@@ -39,7 +53,7 @@ export function ChatMessages() {
                             {friend.name?.charAt(0).toUpperCase() ?? "A"}
                         </AvatarFallback>
                     </Avatar>
-                    <p className="text-muted-foreground italic text-sm shadow-xs">{`${friend.name} is thinking...`}</p>
+                    <p className="text-shadow-accent-foreground italic text-sm ">{`${friend.name} is thinking${dots}`}</p>
                 </div>
             )}
             <div ref={messagesEndRef} />

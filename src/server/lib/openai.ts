@@ -12,7 +12,7 @@ type OpenAIMessage = {
     content: string;
 }
 const completionSettings = {
-    model: "qwen3-235b:strip_thinking_response=true",
+    model: process.env.OPEN_AI_MODEL!,
     temperature: 0.6,
     max_tokens: 1000,
     top_p: 0.95,
