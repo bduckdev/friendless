@@ -33,12 +33,12 @@ export async function seedDefaultFriends(userId: string): Promise<string[]> {
                 const friend = await tx.friend.create({
                     data: {
                         name: template.name,
-                        age: template.age,
-                        gender: template.gender as Gender,
+                        age: template.age!,
+                        gender: template.gender!,
                         personality: template.personality,
                         traits: template.traits,
-                        voice: template.voice,
-                        background: template.background,
+                        voice: template.voice!,
+                        background: template.background!,
                         interests: template.interests,
                         avatar: template.avatar,
                         userId,
@@ -50,7 +50,7 @@ export async function seedDefaultFriends(userId: string): Promise<string[]> {
                 // Create the intro message
                 await tx.message.create({
                     data: {
-                        content: template.introMessage,
+                        content: template.messages[0]!.content,
                         role: "assistant",
                         userId,
                         friendId: friend.id,

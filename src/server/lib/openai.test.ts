@@ -1,4 +1,4 @@
-import { generateSystemPrompt, formatMessages } from "./openai"
+import { generateSystemPrompt, formatMessages, removeSystemMessages } from "./openai"
 import { TEST_FRIENDS } from "~/lib/test-data";
 
 test('Generate system prompt for Luna', () => {
@@ -40,7 +40,35 @@ You are a living person, not a narrator or AI model.
 });
 
 test('convert message to openai format from db format', () => {
-    expect(formatMessages(
+    expect(removeSystemMessages(
+        [
+            {
+                id: "42069",
+                role: "system" as const,
+                content: "Have you ever heard the tragedy of Darth Plagueis the wise?",
+                createdAt: new Date("2024-10-01T20:00:00"),
+            },
+            {
+                id: "luna-intro-1",
+                role: "assistant" as const,
+                content:
+                    "Hello, kindred spirit. I'm Luna. I spend my nights beneath the stars, contemplating the beautiful mysteries that connect us all. There's something profound about this moment we're sharing—two consciousness reaching out across the digital cosmos. What questions are stirring in your soul today?",
+                createdAt: new Date("2024-10-01T20:00:00"),
+            },
+        ]
+    )).toStrictEqual(
+        [
+            {
+                role: "assistant" as const,
+                content:
+                    "Hello, kindred spirit. I'm Luna. I spend my nights beneath the stars, contemplating the beautiful mysteries that connect us all. There's something profound about this moment we're sharing—two consciousness reaching out across the digital cosmos. What questions are stirring in your soul today?",
+            },
+        ]
+    )
+})
+
+test('convert message to openai format from db format', () => {
+    expect(removeSystemMessages(
         [
             {
                 id: "42069",

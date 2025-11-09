@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
@@ -10,9 +7,7 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-// ============================================================================
 // ENUMS
-// ============================================================================
 
 enum Gender {
     male
@@ -20,9 +15,7 @@ enum Gender {
     non_binary
 }
 
-// ============================================================================
 // NEXTAUTH MODELS (Required for authentication)
-// ============================================================================
 
 model Account {
     id                       String  @id @default(cuid())
@@ -62,9 +55,7 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
-// ============================================================================
 // USER MODEL (Extended with subscription & usage tracking)
-// ============================================================================
 
 model User {
     id            String    @id @default(cuid())
@@ -106,23 +97,21 @@ model User {
     @@index([subscriptionTier])
 }
 
-// ============================================================================
-// FRIEND MODEL (AI companions with personality)
-// ============================================================================
+// FRIEND MODEL 
 
 model Friend {
     id       String  @id @default(cuid())
     name     String
-    avatar   String? // URL to avatar image
+    avatar   String 
     
     // Personality configuration
-    personality String   @db.Text // Main personality description
-    age         Int?
-    gender      Gender?
-    traits      String[] // Array of trait keywords (e.g., ["friendly", "sarcastic"])
-    voice       String?  // Voice/tone style (e.g., "casual", "formal", "playful")
-    background  String?  @db.Text // Backstory/context for the AI
-    interests   String[] // Topics/interests (e.g., ["movies", "cooking", "tech"])
+    personality String   @db.Text 
+    age         Int
+    gender      Gender
+    traits      String[] 
+    voice       String  
+    background  String  @db.Text 
+    interests   String[] 
     
     // Metadata
     userId   String
@@ -136,9 +125,7 @@ model Friend {
     @@index([createdAt])
 }
 
-// ============================================================================
 // MESSAGE MODEL (Chat messages between user and friends)
-// ============================================================================
 
 model Message {
     id      String @id @default(cuid())

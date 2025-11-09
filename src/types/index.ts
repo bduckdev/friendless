@@ -56,16 +56,16 @@ export interface Message {
 export interface Friend {
     id: string;
     name: string;
-    avatar: string | null;
+    avatar: string;
     personality: string;
-    age: number | null;
-    gender: Gender | null;
-    traits?: string[];
-    voice: string | null;
-    background: string | null;
-    interests?: string[];
-    createdAt: Date;
-    updatedAt: Date;
+    age: number;
+    gender: Gender;
+    traits: string[];
+    voice: string;
+    background: string;
+    interests: string[];
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export interface FriendWithMessages extends Friend {

@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import type { ChatCompletionFunctionMessageParam } from "openai/resources/index.mjs";
 import { api } from "~/trpc/server";
 import type { FriendWithMessages, Message } from "~/types";
 
@@ -7,8 +8,8 @@ const openai = new OpenAI({
     baseURL: process.env.OPEN_AI_URL!,
 });
 
-type OpenAIMessage = {
-    role: "user" | "assistant";
+type CompletionParam = {
+    role: "user" | "system" | "assistant";
     content: string;
 }
 const completionSettings = {
@@ -20,31 +21,28 @@ const completionSettings = {
     //frequency_penalty: 0.3,
 }
 
-export async function getCompletion(friend: FriendWithMessages, newMessage: string) {
+export async function getCompletion(messages: CompletionParam[]) {
     try {
-        const formattedMessages = formatMessages(friend.messages)
         const completion = await openai.chat.completions.create({
             ...completionSettings,
-            messages: [{ role: "system", content: await generateSystemPrompt(friend) }, ...formattedMessages, { role: "user", content: newMessage }],
+            messages: messages,
         })
+
         const res = completion.choices[0]?.message.content
         if (!res) {
             throw new Error("no response from oai")
         }
         return res.trim()
-
     } catch (e) {
         console.error("[OAI Error] ", e)
         throw new Error("failed to gen ai response")
     }
 }
 
-// Get completion from API
-export async function getCompletionStreaming(friend: FriendWithMessages, newMessage: string) {
-    const formattedMessages = formatMessages(friend.messages)
+export async function getCompletionStream(messages: CompletionParam[]) {
     const stream = await openai.chat.completions.create({
         ...completionSettings,
-        messages: [{ role: "system", content: await generateSystemPrompt(friend) }, ...formattedMessages, { role: "user", content: newMessage }],
+        messages,
         stream: true,
     })
     const encoder = new TextEncoder()
@@ -64,7 +62,6 @@ export async function getCompletionStreaming(friend: FriendWithMessages, newMess
             }
         },
     });
-
 
     return new Response(readable, {
         headers: {
@@ -128,12 +125,15 @@ You are a living person, not a narrator or AI model.
 }
 
 
-// remove system messages and convert to openaimessage type
-export function formatMessages(messages: Message[]): OpenAIMessage[] {
-    const fmt = messages
-        .filter(m => m.role !== "system")
-        .map(m => ({ role: m.role as "user" | "assistant", content: m.content }))
-        .slice(-30)
+// build messages array for a given friend to feed to getCompletion() and getCompletionStream()
+export async function buildMessages(friend: FriendWithMessages, newMessage: string): Promise<CompletionParam[]> {
+    const formatted = removeSystemMessages(friend.messages)
+    const messages = [{ role: "system", content: await generateSystemPrompt(friend) }, ...formatted, { role: "user", content: newMessage }] as CompletionParam[]
 
-    return fmt
+    return messages
+}
+
+// remove system messages
+export function removeSystemMessages(messages: Message[]): Message[] {
+    return messages.filter(m => (m.role === "user" || "assistant")).slice(-30)
 }
