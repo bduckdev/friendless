@@ -32,11 +32,11 @@ export function FriendCard({
             </div>
 
             <div className={cn(isSmall && "hidden md:block", "absolute right-0 bottom-0 left-0 max-h-[50%] overflow-hidden p-4 text-white")}>
-                <h3 className="mb-1 text-2xl font-bold tracking-tight">
+                <h3 className="select-none mb-1 text-2xl font-bold tracking-tight">
                     {name}
                     {age && <span className="ml-2 font-extralight">{age}</span>}
                 </h3>
-                <p className="line-clamp-4 text-sm text-white/85">{background}</p>
+                <p className="select-none line-clamp-4 text-sm text-white/85">{background}</p>
             </div>
 
         </Card>

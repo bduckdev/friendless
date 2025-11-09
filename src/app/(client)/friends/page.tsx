@@ -15,7 +15,7 @@ export default async function FriendsPage() {
     }
 
     return (
-        <main className="shadow-xl container mx-auto px-4 py-8">
+        <main className="shadow-xl container mx-auto px-4 py-8 min-h-screen">
             {/* Header with Create Button */}
             <div className="mb-8 flex items-center justify-between">
                 <div>

@@ -1,7 +1,7 @@
 "use client"
 import { useRef } from "react"
 import Autoplay from "embla-carousel-autoplay"
-import { TEST_FRIENDS } from "~/lib/test-data"
+import { DEFAULT_FRIENDS_TEMPLATE } from "~/lib/default-friends-template"
 import { Card, CardContent } from "~/components/ui/card"
 import {
     Carousel,
@@ -25,7 +25,7 @@ export function FriendCarousel() {
             onMouseLeave={plugin.current.reset}
         >
             <CarouselContent>
-                {TEST_FRIENDS.map((f) => (
+                {DEFAULT_FRIENDS_TEMPLATE.map((f) => (
                     <CarouselItem className="basis-1/3" key={f.id + f.name}>
                         <FriendCard friend={f} isSmall />
                     </CarouselItem>

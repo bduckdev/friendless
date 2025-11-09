@@ -1,6 +1,6 @@
 "use client"
 import type { Friend } from "~/types"
-import { FriendCard } from "./friend-card"
+import { FriendCard } from "~/components/friends/friend-card"
 import { motion, useMotionValue, useTransform } from "framer-motion"
 import { useState } from "react"
 import { useRouter } from "next/navigation"

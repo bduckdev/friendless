@@ -1,6 +1,6 @@
 import { auth } from "~/server/auth";
 import { api } from "~/trpc/server";
-import { SwipeGallery } from "~/components/friends/swipe-gallery";
+import { SwipeGallery } from "~/app/(client)/_components/swipe-gallery";
 import { FriendCarousel } from "~/components/friend-carousel"
 import { Separator } from "~/components/ui/separator";
 import type { Friend } from "~/types";
@@ -53,14 +53,14 @@ export default async function Home() {
                 </div>
             </section>
             <Separator className="mx-auto max-w-5xl" />
-            <section className="w-full px-4 sm:px-6 lg:px-8 py-10 bg-secondary">
-                <div className=" max-w-5xl mx-auto flex flex-col items-center text-center gap-8 ">
+            <section className="w-full px-4 sm:px-6 lg:px-8 py-10">
+                <div className=" max-w-5xl mx-auto flex flex-col items-center text-center gap-12">
                     <h2 className="text-3xl font-semibold tracking-tight">Be part of the movement toward a <span className="italic">more</span> connected, <span className="italic">less</span> connected world.</h2>
                     <Link href={session?.user.name ? "/friends" : "/signin"}>
                         <Button size="lg" className="text-base font-semibold">Get started</Button>
                     </Link>
                 </div>
             </section>
-        </main>
+        </main >
     );
 }

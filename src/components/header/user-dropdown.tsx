@@ -59,7 +59,6 @@ export function UserDropdown({ session, status }: UserDropdownProps) {
                     </Link>
                 </DropdownMenuItem>
 
-                <DropdownMenuSeparator />
 
                 <DropdownMenuItem asChild>
                     <Link href="/profile" className="cursor-pointer">

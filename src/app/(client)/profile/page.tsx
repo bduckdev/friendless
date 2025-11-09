@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { ProfileEditModal } from "~/components/profile/profile-edit-modal";
+import { ProfileEditModal } from "./_components/profile-edit-modal";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
     Card,
@@ -22,9 +22,9 @@ export default async function ProfilePage() {
 
     return (
         <main className="container mx-auto px-4 py-4 md:py-8">
-            <section className="py-2 md:py-4">
+            <section className="py-4">
                 <h1 className="text-3xl font-bold">Profile</h1>
-                <p className="text-muted-foreground mt-4">
+                <p className="text-muted-foreground my-2">
                     Your account, stats, and billing information.
                 </p>
             </section>

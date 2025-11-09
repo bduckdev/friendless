@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useRef, useState } from "react";
 import { useChatContext } from "./chat-context";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
@@ -48,7 +47,7 @@ export function ChatMessages() {
             {isThinking && (
                 <div className="flex items-center gap-2">
                     <Avatar className="size-8 shrink-0 select-none">
-                        <AvatarImage src={friend.avatar!} alt={friend.name} />
+                        <AvatarImage src={friend.avatar} alt={friend.name} />
                         <AvatarFallback>
                             {friend.name?.charAt(0).toUpperCase() ?? "A"}
                         </AvatarFallback>
