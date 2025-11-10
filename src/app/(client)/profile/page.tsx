@@ -13,7 +13,7 @@ import { api } from "~/trpc/server";
 
 export default async function ProfilePage() {
     const session = await auth();
-    const userData = await api.user.getProfile();
+    const userData = await api.user.getUser();
     const stats = await api.user.getStats();
 
     if (!session?.user) {
