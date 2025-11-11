@@ -2,11 +2,7 @@
 
 import { toast } from "sonner";
 import { api } from "~/trpc/server";
-import type {
-    FriendWithMessages,
-    Message,
-    DeleteRollbackResponse,
-} from "~/types";
+import type { FriendWithMessages, DeleteRollbackResponse } from "~/types";
 
 export async function sendMessage(
     friend: FriendWithMessages,

@@ -51,7 +51,7 @@ export function ChatMessage({
             {/* Avatar for assistant messages (on left) */}
             {!isUser && (
                 <Avatar className="size-8 shrink-0 select-none">
-                    <AvatarImage src={avatar!} alt={name} />
+                    <AvatarImage src={avatar} alt={name} />
                     <AvatarFallback>
                         {name?.charAt(0).toUpperCase() ?? "A"}
                     </AvatarFallback>
@@ -70,7 +70,7 @@ export function ChatMessage({
                     !isUser && [
                         "before:content-['']",
                         "before:absolute",
-                        "before:left-[-4px]",
+                        "before:left-1",
                         "before:bottom-[3px]",
                         "before:w-0",
                         "before:h-0",
@@ -85,7 +85,7 @@ export function ChatMessage({
                     isUser && [
                         "after:content-['']",
                         "after:absolute",
-                        "after:right-[-4px]",
+                        "after:right-1",
                         "after:bottom-[3px]",
                         "after:w-0",
                         "after:h-0",
@@ -98,7 +98,7 @@ export function ChatMessage({
                     ],
                 )}
             >
-                <p className="text-sm break-words whitespace-pre-wrap">{content}</p>
+                <p className="text-sm wrap-break-word whitespace-pre-wrap">{content}</p>
             </div>
             {/* Delete button for assistant messages */}
             {(isDeletable && showDeleteButton) && (
@@ -107,10 +107,10 @@ export function ChatMessage({
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="h-6 w-6 opacity-60 transition-opacity  hover:opacity-100"
+                            className="h-4 w-4 opacity-60 transition-opacity  hover:opacity-100"
                             disabled={isLoading || isDeleting}
                         >
-                            <Trash2 className="text-muted-foreground hover:text-destructive h-3 w-3" />
+                            <Trash2 className="text-muted-foreground hover:text-destructive h-2 w-2" />
                         </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>

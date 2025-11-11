@@ -1,16 +1,18 @@
 import OpenAI from "openai";
 import { api } from "~/trpc/server";
 import type { FriendWithMessages, Message } from "~/types";
+import type { CreateFriendType } from "../api/schemas/friend.schema";
 
 const openai = new OpenAI({
     apiKey: process.env.OPEN_AI_KEY!,
     baseURL: process.env.OPEN_AI_URL!,
 });
 
-type CompletionParam = {
+export type CompletionParam = {
     role: "user" | "system" | "assistant";
     content: string;
 }
+
 const completionSettings = {
     model: process.env.OPEN_AI_MODEL!,
     temperature: 0.6,
@@ -135,4 +137,43 @@ export async function buildMessages(friend: FriendWithMessages, newMessage: stri
 // remove system messages
 export function removeSystemMessages(messages: Message[]): Message[] {
     return messages.filter(m => (m.role === "user" || "assistant")).slice(-30)
+}
+
+// build the prompt for the first message
+export function generateFirstMessage(friend: CreateFriendType, u: string | null): CompletionParam[] {
+    const userName = u ? `, ${u}.` : `.`
+    return [{
+        role: "system", content: `
+You are writing the *first message* in a message chain between you, ${friend.name} and the ${userName}
+
+Base your tone and style entirely on the provided friend profile below.
+Your message should sound like a real person introducigenerateSystemPromptng themselves for the first time — warm, natural, and reflective of their distinct personality, voice, and interests.
+
+Keep it concise (2–5 sentences max). It should *invite conversation*, not give a monologue.
+Avoid generic greetings or robotic phrasing. Write as if you’re texting someone new but already feel a small spark of curiosity about them.
+
+---
+
+Friend Profile:
+Name: ${friend.name}
+Age: ${friend.age}
+Gender: ${friend.gender}
+Personality: ${friend.personality}
+Voice: ${friend.voice}
+Traits: ${friend.traits.join(", ")}
+Interests: ${friend.interests.join(", ")}
+Background: ${friend.background}
+
+---
+
+Now, write their very first message to the user.
+It should:
+- Feel personal and emotionally authentic.
+- Reflect the character’s worldview or quirks subtly.
+- Open with an inviting thought, question, or small story.
+- Be written in the first person.
+
+Return only the message text, no quotes or labels.
+`}];
+
 }

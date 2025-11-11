@@ -2,13 +2,10 @@
 import { useRef } from "react"
 import Autoplay from "embla-carousel-autoplay"
 import { DEFAULT_FRIENDS_TEMPLATE } from "~/lib/default-friends-template"
-import { Card, CardContent } from "~/components/ui/card"
 import {
     Carousel,
     CarouselContent,
     CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
 } from "~/components/ui/carousel"
 import { FriendCard } from "./friends/friend-card"
 

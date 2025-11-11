@@ -1,8 +1,6 @@
 "use server"
 
-import { getCompletion } from "~/server/lib/openai";
 import { api } from "~/trpc/server"
-import type { Message } from "~/types";
 
 type CreateFriendInput = {
     name: string;
@@ -19,7 +17,6 @@ type CreateFriendInput = {
 export async function handleCreateFriend(input: CreateFriendInput) {
     try {
         const newFriend = await api.friend.create(input)
-        const firstMessage = await getCompletion()
         return newFriend
     } catch (e) {
         console.error("Error in handleCreateFriend action:", e);

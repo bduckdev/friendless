@@ -19,8 +19,8 @@ export const FriendIdSchema = z.object({
 });
 
 export const FRIEND_LIMITS = {
-    free: 10,
-    premium: 50,
+    free: 50,
+    premium: -1,
 };
 
 export type CreateFriendType = z.infer<typeof CreateFriendSchema>;

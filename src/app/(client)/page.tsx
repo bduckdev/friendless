@@ -17,7 +17,6 @@ export default async function Home() {
     } else {
         friends = TEST_FRIENDS;
     }
-
     return (
         <main className="mx-auto py-4 md:py-8">
             <section className="container mx-auto flex max-w-2xl flex-col gap-2 md:gap-4 text-center pb-8">

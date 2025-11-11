@@ -18,9 +18,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~
 import { Textarea } from "~/components/ui/textarea"
 import { handleCreateFriend } from "~/app/(client)/friends/actions"
 import { toast } from "sonner"
-import { redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
+import { Spinner } from "~/components/ui/spinner"
 
-const NUM_AVATARS = 20
+const NUM_AVATARS = 15
 
 export const DEFAULT_PERSONALITY_PLACEHOLDER =
     "Warm, curious, and a little mischievous—asks thoughtful questions, keeps things grounded and kind, and mixes calm reflection with quick flashes of humor.";
@@ -28,6 +29,7 @@ export const DEFAULT_BACKGROUND_PLACEHOLDER =
     "Grew up bouncing between books and late-night conversations, studied a bit of science and art, and chose people over prestige. Keeps a beat-up notebook of half-ideas, believes small daily rituals change lives, and is always collecting stories worth telling twice.";
 
 export default function CreateFriendForm() {
+    const router = useRouter()
     const getRandomAvatar = () => Math.floor(Math.random() * NUM_AVATARS + 1)
     const formSchema = z.object({
         name: z.string().min(2).max(30).regex(/^[A-Za-z]+$/),
@@ -60,8 +62,8 @@ export default function CreateFriendForm() {
         try {
             const avatar = `/avatars/${data.gender}/${data.avatar}.png`
             const newFriend = await handleCreateFriend({ ...data, avatar })
-            toast.success(`successfully created new friend: ${newFriend.name}`)
-            redirect(`/chat/${newFriend.id}`)
+            toast.success(`Successfully created your new friend!`)
+            router.push(`/chat/${newFriend.id}`)
         } catch (e) {
             toast.error("Error in creating new friend: ", e!)
             throw new Error("Error in create-friend-form onSubmit", e!);
@@ -104,7 +106,7 @@ export default function CreateFriendForm() {
                         <Field className="" data-invald={fieldState.invalid}>
                             <FieldContent>
                                 <FieldLabel htmlFor={field.name}>Name</FieldLabel>
-                                <FieldDescription>{"Your new friend's name."}</FieldDescription>
+                                <FieldDescription className="hidden md:block">{"Your new friend's name."}</FieldDescription>
                                 <ButtonGroup className="w-full">
                                     <Input
                                         {...field}
@@ -132,10 +134,10 @@ export default function CreateFriendForm() {
                     name="gender"
                     control={form.control}
                     render={({ field }) => (
-                        <Field className="w-[25%]">
+                        <Field className="md:w-[25%]">
                             <FieldContent>
                                 <FieldLabel htmlFor={field.name}>Gender</FieldLabel>
-                                <FieldDescription>{"Your new friend's gender identity."}</FieldDescription>
+                                <FieldDescription className="hidden md:block">{"Your friend's gender."}</FieldDescription>
                                 <ButtonGroup role="radiogroup" className="">
                                     <Button
                                         type="button"
@@ -340,9 +342,15 @@ export default function CreateFriendForm() {
                     </Field>
                 )}
             />
-            <Button type="submit">
-                Create Friend
-            </Button>
+            {form.formState.isSubmitting || form.formState.isSubmitted ? (
+                <Button disabled={true}>
+                    <Spinner className="size-4" />
+                </Button>
+            ) : (
+                <Button type="submit">
+                    Create Friend
+                </Button>
+            )}
         </form >
     )
 }

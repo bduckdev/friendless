@@ -10,7 +10,6 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "~/components/ui/sheet";
-import { Separator } from "~/components/ui/separator";
 import Link from "next/link";
 import type { Session } from "next-auth";
 
@@ -19,7 +18,7 @@ interface MobileNavProps {
     links: { label: string, href: string }[]
 }
 
-export function MobileNav({ session, links }: MobileNavProps) {
+export function MobileNav({ links }: MobileNavProps) {
     const [open, setOpen] = useState(false);
 
     return (

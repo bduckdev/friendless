@@ -117,8 +117,8 @@ export async function* sendStreamingHandler(
     // Save user message
     await ctx.db.message.create({
         data: {
-            content: input.content,
             role: "user",
+            content: input.content,
             userId,
             friendId: input.friendId,
         },
@@ -126,8 +126,8 @@ export async function* sendStreamingHandler(
 
     const assistantMessage = await ctx.db.message.create({
         data: {
-            content: newMessage.trim(),
             role: "assistant",
+            content: newMessage.trim(),
             userId,
             friendId: input.friendId,
         },
@@ -225,7 +225,7 @@ export async function getMessagesByFriendHandler(
             friendId: input.friendId,
             ...(input.cursor ? { id: { lt: input.cursor } } : {}),
         },
-        orderBy: { createdAt: "desc" },
+        orderBy: { createdAt: "asc" },
         take: input.limit + 1, // Take one extra to determine if there are more
     });
 

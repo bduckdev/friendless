@@ -1,6 +1,5 @@
 import { db } from "~/server/db";
 import { DEFAULT_FRIENDS_TEMPLATE } from "~/lib/default-friends-template";
-import type { Gender } from "@prisma/client";
 
 /**
  * Seed default friends for a new user
@@ -33,12 +32,12 @@ export async function seedDefaultFriends(userId: string): Promise<string[]> {
                 const friend = await tx.friend.create({
                     data: {
                         name: template.name,
-                        age: template.age!,
-                        gender: template.gender!,
+                        age: template.age,
+                        gender: template.gender,
                         personality: template.personality,
                         traits: template.traits,
-                        voice: template.voice!,
-                        background: template.background!,
+                        voice: template.voice,
+                        background: template.background,
                         interests: template.interests,
                         avatar: template.avatar,
                         userId,

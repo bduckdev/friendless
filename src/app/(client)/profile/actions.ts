@@ -1,6 +1,5 @@
 "use server"
 
-import { toast } from "sonner"
 import { api } from "~/trpc/server"
 
 export async function handleProfileEdit({ name, email }: { name: string, email: string }) {

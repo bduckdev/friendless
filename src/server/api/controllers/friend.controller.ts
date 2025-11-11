@@ -6,6 +6,7 @@ import {
     type FriendIdType,
 } from "../schemas/friend.schema";
 import { getUserIdFromContext } from "../utils";
+import { generateFirstMessage, getCompletion } from "~/server/lib/openai";
 
 export async function createFriendHandler(
     ctx: Context,
@@ -15,7 +16,7 @@ export async function createFriendHandler(
     // Check friend limit based on subscription tier
     const user = await ctx.db.user.findUnique({
         where: { id: userId },
-        select: { subscriptionTier: true },
+        select: { name: true, subscriptionTier: true },
     });
     if (!user) {
         throw new TRPCError({
@@ -36,6 +37,7 @@ export async function createFriendHandler(
             message: `Friend limit reached. ${user.subscriptionTier === "free" ? "Upgrade to premium for more friends." : ""}`,
         });
     }
+
     // Create the friend
     const friend = await ctx.db.friend.create({
         data: {
@@ -43,6 +45,17 @@ export async function createFriendHandler(
             userId,
         },
     });
+
+    const introMessage = await getCompletion(generateFirstMessage(input, user.name))
+
+    await ctx.db.message.create({
+        data: {
+            role: "assistant",
+            content: introMessage.trim(),
+            userId,
+            friendId: friend.id,
+        }
+    })
 
     return friend;
 }
@@ -97,19 +110,16 @@ export async function deleteFriendByIdHandler(
     input: FriendIdType,
 ) {
     const userId = getUserIdFromContext(ctx);
-
     // Check if friend exists and belongs to user
     const friend = await ctx.db.friend.findUnique({
         where: { id: input.friendId },
     });
-
     if (!friend) {
         throw new TRPCError({
             code: "NOT_FOUND",
             message: "Friend not found",
         });
     }
-
     if (friend.userId !== userId) {
         throw new TRPCError({
             code: "UNAUTHORIZED",

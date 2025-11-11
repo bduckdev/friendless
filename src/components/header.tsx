@@ -3,10 +3,8 @@
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { UserDropdown } from "./header/user-dropdown";
-import { MobileNav } from "./header/mobile-nav";
-import { cn } from "~/lib/utils";
 import Image from "next/image";
-import { User, Users } from "lucide-react";
+import { Users } from "lucide-react";
 
 export function Header() {
     const links = [{
@@ -42,7 +40,7 @@ export function Header() {
                             </div>
                         </nav>
                     )}
-                    <div className="flex flex-shrink-0 items-center gap-4">
+                    <div className="flex shrink-0 items-center gap-4">
                         <UserDropdown session={session!} status={status} />
                     </div>
                 </div>

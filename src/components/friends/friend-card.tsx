@@ -13,10 +13,10 @@ export function FriendCard({
     const { avatar, name, age, background } = friend
 
     return (
-        <Card className="text-left group relative aspect-[7/10] cursor-pointer overflow-hidden border-0 transition-all">
+        <Card className="text-left group relative aspect-7/10 cursor-pointer overflow-hidden border-0 transition-all">
             {/* Background Image/Color */}
             <div
-                className="absolute inset-0 bg-gradient-to-br from-purple-400 via-pink-400 to-blue-400"
+                className="absolute inset-0 bg-linear-to-br from-purple-400 via-pink-400 to-blue-400"
                 style={
                     avatar
                         ? {
@@ -28,7 +28,7 @@ export function FriendCard({
                 }
             >
                 {/* Overlay gradient for text readability - darker for better contrast */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/50 to-transparent" />
             </div>
 
             <div className={cn(isSmall && "hidden md:block", "absolute right-0 bottom-0 left-0 max-h-[50%] overflow-hidden p-4 text-white")}>
