@@ -43,6 +43,7 @@ export const authConfig = {
         signIn: "/signin",
         error: "/error",
     },
+    trustHost: process.env.NODE_ENV === "production",
     adapter: PrismaAdapter(db),
     callbacks: {
         session: ({ session, user }) => ({
