@@ -16,7 +16,7 @@ export function FriendCard({
         <Card className="text-left group relative aspect-7/10 cursor-pointer overflow-hidden border-0 transition-all">
             {/* Background Image/Color */}
             <div
-                className="absolute inset-0 bg-linear-to-br from-purple-400 via-pink-400 to-blue-400"
+                className="absolute inset-0"
                 style={
                     avatar
                         ? {

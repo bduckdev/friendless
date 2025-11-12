@@ -3,8 +3,8 @@ import type { FriendWithMessages, Message, User } from "~/types";
 import type { CreateFriendType } from "../api/schemas/friend.schema";
 
 const openai = new OpenAI({
-    apiKey: process.env.OPEN_AI_KEY!,
-    baseURL: process.env.OPEN_AI_URL!,
+    apiKey: process.env.OPENAI_API_KEY!,
+    baseURL: process.env.OPENAI_URL ?? "https://api.openai.com/v1",
 });
 
 export type CompletionParam = {
@@ -13,7 +13,7 @@ export type CompletionParam = {
 }
 
 const completionSettings = {
-    model: process.env.OPEN_AI_MODEL!,
+    model: process.env.OPENAI_MODEL!,
     temperature: 0.6,
     max_tokens: 1000,
     top_p: 0.95,
@@ -30,12 +30,12 @@ export async function getCompletion(messages: CompletionParam[]) {
 
         const res = completion.choices[0]?.message.content
         if (!res) {
-            throw new Error("no response from oai")
+            throw new Error("No response from API")
         }
         return res.trim()
     } catch (e) {
         console.error("[OAI Error] ", e)
-        throw new Error("failed to gen ai response")
+        throw new Error("Failed to generate AI response")
     }
 }
 
