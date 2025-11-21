@@ -15,9 +15,9 @@ Demo it [here](https://friendless.bduck.dev/)
 
 ## Screenshots
 
-![Screenshot 1](screenshots/1.jpg)
-![Screenshot 2](screenshots/2.jpg)
-![Screenshot 3](screenshots/3.jpg)
+<img src="screenshots/1.jpg" alt="Landing Page" width="600"/>
+<img src="screenshots/2.jpg" alt="Swipe Gallery" width="600"/>
+<img src="screenshots/3.jpg" alt="Chat Window"width="400"/>
 
 ## Instructions to run locally
 
